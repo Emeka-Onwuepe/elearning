@@ -12,10 +12,13 @@ user_types = (
 
 class UserManager(BaseUserManager):
     def create_user(self,email, 
-                    first_name='null',last_name='null', password=None):
+                    first_name='null',last_name='null',
+                    user_type="individual",phone_number=None,password=None):
         if not email:
             raise ValueError('Users must have an email address')
-        user = self.model(email=self.normalize_email(email),first_name=first_name,last_name=last_name,
+        user = self.model(email=self.normalize_email(email),
+                          first_name=first_name,last_name=last_name,
+                          user_type=user_type,phone_number=phone_number
                            )
         user.set_password(password)
         user.save(using=self._db)
@@ -33,6 +36,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     last_name =models.CharField(verbose_name='last name', max_length=255)
     email = models.EmailField(verbose_name='email address',max_length=255,unique=True,)
     user_type = models.CharField(max_length=10, choices = user_types)
+    phone_number = models.CharField(verbose_name='phone number', max_length=20,null=True,blank=True)
     completed_course_units = models.ManyToManyField(Course_Unit, verbose_name="completed_course_units",
                                                    related_name='completed_course_units')
     completed_courses = models.ManyToManyField(Course, verbose_name="completed_courses",

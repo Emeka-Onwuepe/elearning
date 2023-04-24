@@ -103,7 +103,7 @@ REST_KNOX = {
   'EXPIRY_DATETIME_FORMAT': api_settings.DATETIME_FORMAT,
 }
 
-CORS_ORIGIN_WHITELIST = []
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
