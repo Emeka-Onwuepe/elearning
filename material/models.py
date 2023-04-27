@@ -7,7 +7,7 @@ from quiz.models import Quiz
 class Video(models.Model):
     '''Model definition for Video.'''
     name = models.CharField("name", max_length=150)
-    file = models.FileField("file")
+    file = models.FileField("file",upload_to = 'videos/',)
 
     class Meta:
         '''Meta definition for Video.'''
@@ -28,7 +28,7 @@ class Material(models.Model):
     '''Model definition for Material.'''
     material_type = models.CharField("material_type",choices=material_types, max_length=10)
     video = models.ForeignKey(Video, on_delete=models.SET_NULL,
-                              verbose_name="video",related_name="video",
+                              verbose_name="video",related_name="video", 
                               null=True,blank=True)
     article = models.ForeignKey(Article, on_delete=models.SET_NULL,
                                 verbose_name="article",related_name="article",

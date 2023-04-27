@@ -35,6 +35,7 @@ class Class(models.Model):
 
         verbose_name = 'Class'
         verbose_name_plural = 'Classes'
+        ordering = ['id']
 
     def __str__(self):
         return self.name
@@ -49,6 +50,7 @@ class SpecialClass(models.Model):
 
         verbose_name = 'SpecialClass'
         verbose_name_plural = 'SpecialClasses'
+        ordering = ['id']
 
     def __str__(self):
         return self.name

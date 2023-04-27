@@ -19,8 +19,8 @@ import sys
 class Article(models.Model):
     title = models.CharField(max_length=255)
     title_slug = models.SlugField(default="null")
-    audio = models.FileField("audio",null=True, blank=True)
-    image = models.ImageField(null=True)
+    audio = models.FileField("audio",null=True, blank=True,upload_to = 'audio/',)
+    image = models.ImageField(null=True,upload_to='images/')
     image_source = models.CharField(max_length=255, null=True, blank=True)
     image_description = models.CharField(
         max_length=255, default='image', blank=True)
@@ -74,8 +74,8 @@ class Sections(models.Model):
     article = models.ForeignKey(
         Article, related_name='sections', on_delete=models.CASCADE)
     sub_heading = models.CharField(max_length=255, null=True)
-    audio = models.FileField("audio",null=True, blank=True)
-    Sub_section_image = models.ImageField(null=True, blank=True)
+    audio = models.FileField("audio",null=True, blank=True,upload_to='audio/')
+    Sub_section_image = models.ImageField(null=True, blank=True,upload_to = 'images/',)
     image_source = models.CharField(max_length=255, null=True, blank=True)
     image_description = models.CharField(
         max_length=255, default="image", blank=True)
