@@ -45,4 +45,9 @@ class Material(models.Model):
         verbose_name_plural = 'Materials'
 
     def __str__(self):
-        pass
+        if self.video:
+            return f'{self.material_type} {self.video}'
+        elif self.quiz:
+            return f'{self.material_type} {self.quiz}'
+        else :
+            return f'{self.material_type} {self.article}'

@@ -43,6 +43,10 @@ class User(AbstractBaseUser,PermissionsMixin):
                                                    related_name='completed_courses')
     completed_course_sets = models.ManyToManyField(Course_set, verbose_name="completed_course_sets",
                                                    related_name='completed_course_sets')
+    courses = models.ManyToManyField(Course, verbose_name="courses",
+                                                   related_name='user_courses')
+    course_sets = models.ManyToManyField(Course_set, verbose_name="course_sets",
+                                                   related_name='user_course_sets')
     
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

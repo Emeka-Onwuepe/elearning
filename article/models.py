@@ -20,7 +20,7 @@ class Article(models.Model):
     title = models.CharField(max_length=255)
     title_slug = models.SlugField(default="null")
     audio = models.FileField("audio",null=True, blank=True,upload_to = 'audio/',)
-    image = models.ImageField(null=True,upload_to='images/')
+    image = models.ImageField(null=True,upload_to='images/',blank=True)
     image_source = models.CharField(max_length=255, null=True, blank=True)
     image_description = models.CharField(
         max_length=255, default='image', blank=True)
@@ -95,11 +95,14 @@ class Sections(models.Model):
             im = Image.open(self.Sub_section_image)
             width, height = im.size
             output = BytesIO()
-            n = 0.5
-            Width = floor(width * n)
-            Height = floor(height * n)
+            # n = 0.5
+            # Width = floor(width * n)
+            # Height = floor(height * n)
+            newWidth = 400
+            ratio = round(newWidth/width,2)
+            newHeight = floor(height * ratio)
             if width > 1000:
-                im = im.resize((Width, Height))
+                im = im.resize((newWidth, newHeight))
                 im.save(output, format='JPEG', quality=100)
                 output.seek(0)
                 self.Sub_section_image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % self.Sub_section_image.name.split('.')[
@@ -108,29 +111,3 @@ class Sections(models.Model):
         super().save(*args, **kwargs)  # Call the real save() method
 
 
-@receiver(pre_save, sender=Article)
-def delete_Artictle_image(sender, instance, *args, **kwargs):
-    if instance.pk:
-        article = Article.objects.get(pk=instance.pk)
-        if article.image != instance.image:
-            article.image.delete(False)
-
-
-@receiver(pre_save, sender=Sections)
-def delete_Sections_image(sender, instance, *args, **kwargs):
-    if instance.pk:
-        section = Sections.objects.get(pk=instance.pk)
-        if section.Sub_section_image != instance.Sub_section_image:
-            section.Sub_section_image.delete(False)
-
-
-@receiver(post_delete, sender=Article)
-def delete_artictle_image(sender, instance, using, *args, **kwargs):
-    if instance.image:
-        instance.image.delete(save=False)
-
-
-@receiver(post_delete, sender=Sections)
-def delete_sections_image(sender, instance, using, *args, **kwargs):
-    if instance.Sub_section_image:
-        instance.Sub_section_image.delete(save=False)

@@ -1,8 +1,7 @@
 from random import random
 from re import findall
 
-from django.db.models.signals import (pre_delete,m2m_changed,
-                                        post_save, pre_save)
+from django.db.models.signals import ( post_save, pre_save)
 from django.dispatch import receiver
 
 from .models import School,Set,Class,Term,SpecialClass

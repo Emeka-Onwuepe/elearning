@@ -17,7 +17,7 @@ class Course_Unit(models.Model):
         ordering = ['order']
 
     def __str__(self):
-        return self.material
+        return f'{self.material} -- {self.order}'
     
 class Course_Week(models.Model):
     '''Model definition for Course_Week.'''
@@ -34,7 +34,7 @@ class Course_Week(models.Model):
         ordering = ['order']
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.order}'
     
 
 class Course(models.Model):

@@ -1,3 +1,4 @@
 db*
 __pycache__/
-migrations/
+media/
+[0-9]*
