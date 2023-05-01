@@ -34,7 +34,7 @@ class Material(models.Model):
                                 verbose_name="article",related_name="article",
                                 null=True,blank=True)
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL,
-                                verbose_name="quiz",related_name="quiz",
+                                verbose_name="quiz",related_name="material_quiz",
                                 null=True,blank=True)
 
 

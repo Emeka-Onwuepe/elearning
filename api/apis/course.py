@@ -2,8 +2,14 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import permissions,generics
 from rest_framework.response import Response
-from course.models import Course
-from course.serializers import Get_Course_Serializer, Get_Course_Set_Serializer
+from article.models import Article
+from article.serializer import Get_Article_Serializer
+from course.models import Course, Course_Unit
+from course.serializers import Get_Course_Serializer, Get_Course_Set_Serializer, Get_Course_Unit_Serializer
+from material.models import Material, Video
+from material.serializers import Get_Material_Serializer,Get_Video_Serializer
+from quiz.models import Quiz
+from quiz.serializer import Get_Quiz_Serializer
 
 from school.models import Set, Term
 
@@ -52,6 +58,38 @@ class Get_Course(generics.GenericAPIView):
         course_id = request.query_params['id']
         course = Course.objects.get(id=course_id)
         data = Get_Course_Serializer(course).data
-
+        
+        # materials = Material.objects.filter(course_unit__course_week = course.course_week)
+        course_units = Course_Unit.objects.filter(course_unit__in = course.course_week.all()).distinct()
+        course_unit_data = Get_Course_Unit_Serializer(course_units,many=True).data
+        
+        materials_id = []
+        for item in course_units.values('material'):
+            if item['material'] not in materials_id:
+                materials_id.append(item['material'])
+        material = Material.objects.filter(id__in = materials_id)
+        material_data = Get_Material_Serializer(material,many=True).data
+        
       
-        return Response({'data':data})
+        return Response({'course':data,"units":course_unit_data,'materials':material_data})
+    
+class Get_Lession(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+  
+
+    def get(self, request, *args, **kwargs):
+
+        lession_id = request.query_params['id']
+        type = request.query_params['type']
+
+        if type == 'video':
+            lesson = Video.objects.get(id=lession_id)
+            lesson_data = Get_Video_Serializer(lesson).data
+        if type == 'quiz':
+            lesson = Quiz.objects.get(id=lession_id)
+            lesson_data = Get_Quiz_Serializer(lesson).data
+        if type == 'article':
+            lesson = Article.objects.get(id=lession_id)
+            lesson_data = Get_Article_Serializer(lesson).data
+            
+        return Response({'lesson':lesson_data})

@@ -33,7 +33,7 @@ class Questions(models.Model):
 class Quiz(models.Model):
     '''Model definition for Quiz.'''
     name = models.CharField("name", max_length=150)
-    question = models.ManyToManyField(Questions,verbose_name='question',related_name="quiz_question")
+    quiz = models.ManyToManyField(Questions,verbose_name='quiz',related_name="quiz_question")
     
     class Meta:
         '''Meta definition for Quiz.'''
