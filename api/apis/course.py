@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import permissions,generics
+from rest_framework import permissions,generics,status
 from rest_framework.response import Response
 from article.models import Article
 from article.serializer import Get_Article_Serializer
@@ -23,9 +23,15 @@ class Get_Courses(generics.GenericAPIView):
             
             student_set =  Set.objects.get(students = request.user)
             if student_set.customize:
-                term = Term.objects.get(order= student_set.special_class.term,
+                    if not student_set.special_class:
+                        content={"Access denied":"You are not assigned to any class."}
+                        return Response(content,status=status.HTTP_403_FORBIDDEN)
+                    term = Term.objects.get(order= student_set.special_class.term,
                                         term_special_class = student_set.special_class)
             else:
+                if not student_set.set_class:
+                    content={"Access denied":"You are not assigned to any class."}
+                    return Response(content,status=status.HTTP_403_FORBIDDEN)
                 term = Term.objects.get(order= student_set.set_class.term,
                                         term_class = student_set.set_class)
                 

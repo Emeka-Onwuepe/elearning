@@ -1,7 +1,6 @@
 from school.models import Set
 from user.serializers import Get_User_Serializer, User_Serializer, Login_Serializer
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_list_or_404
 
 User=get_user_model()
 from rest_framework import permissions,generics,status
