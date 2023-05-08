@@ -4,21 +4,31 @@ from rest_framework import permissions,generics,status
 from rest_framework.response import Response
 from article.models import Article
 from article.serializer import Get_Article_Serializer
-from course.models import Course, Course_Unit
-from course.serializers import Get_Course_Serializer, Get_Course_Set_Serializer, Get_Course_Unit_Serializer
+from course.models import Category, Course, Course_Unit,Course_set
+from course.serializers import Get_Category, Get_Course_Serializer, Get_Course_Set_Serializer, Get_Course_Unit_Serializer
 from material.models import Material, Video
 from material.serializers import Get_Material_Serializer,Get_Video_Serializer
 from quiz.models import Quiz
 from quiz.serializer import Get_Quiz_Serializer
 
 from school.models import Set, Term
+from django.conf import settings
 
 class Get_Courses(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        course_sets = {'uniques':None}
+        returned_data = {
+                        'uniques':[],
+                       'course_sets': [],
+                       'course': [],
+                       'public_key': None,
+                        'categories': [],
+                        'available_singles':[],
+                        'available_course_set': []
+                       }
         course_ids =[]
+        course_sets_id = []
         if request.user.user_type == 'student':
             
             student_set =  Set.objects.get(students = request.user)
@@ -37,23 +47,74 @@ class Get_Courses(generics.GenericAPIView):
                 
                 
             course_sets_data = Get_Course_Set_Serializer(term.course_set,many=True).data
-            course_sets['course_sets'] = course_sets_data
-        elif request.user.user_type == 'individual':  
+            returned_data['course_sets'].append(*course_sets_data)
+        elif request.user.user_type == 'individual' or request.user.is_double:  
             course_sets_data = Get_Course_Set_Serializer(request.user.course_sets,many=True).data
-            course_sets['course_sets'] = course_sets_data
+            returned_data['course_sets'].append(*course_sets_data)
             # courses = Course.objects.filter(pk__in = request.user.courses)
             courses_data = Get_Course_Serializer(request.user.courses,many=True).data
-            course_sets['uniques'] = courses_data
+            returned_data['uniques'].append(*courses_data) 
+            
             
         for couse_set in course_sets_data:
+            course_sets_id.append(course_set['id'])
             for course in couse_set['course_set_unit']:
                 course_ids.append(course['course'])
                 
         courses = Course.objects.filter(pk__in = course_ids)
         courses_data = Get_Course_Serializer(courses,many=True).data
-        course_sets['courses'] = courses_data
+        returned_data['courses'] = courses_data
         
-        return Response(course_sets)
+        # this part is not scaleable
+        # change as the application grows
+        course_sets = []
+        single_courses = []
+        # purchase_count
+        # public
+        # category
+        
+        if request.user.user_type == 'individual' or request.user.is_double: 
+            categories = Category.objects.all()
+            returned_data['categories'] = Get_Category(categories,many=True).data
+            
+            for category in categories:
+                course_set = Course_set.objects.exclude(pk__in=course_sets_id).filter(category=category,
+                                                    public = True).order_by('purchase_count')[:10]
+                course_set = Get_Course_Set_Serializer(course_set,many=True).data
+                course_sets.append(course_set)
+                
+                singles = Course.objects.exclude(pk__in=course_ids).filter(category=category,
+                                                    public = True).order_by('purchase_count')[:10]
+                singles = Get_Course_Serializer(singles,many=True).data
+                single_courses.append(singles)
+                
+            returned_data['available_course_set'] = course_sets
+            returned_data['available_singles'] = single_courses
+            returned_data['public_key'] = settings.PAYSTACT_PUBLIC_KEY
+        
+        # personal_course_set = 
+              
+        return Response(returned_data)
+    
+# class Get_Display_Course(generics.GenericAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
+    
+#     def get(self,request,*args,**kwargs):
+#         public_key = settings.PAYSTACT_PUBLIC_KEY
+#         user = request.user
+#         action = request.query_params['action']
+#         if action == 'all':
+#             # courses = Course.
+#             categories = Category.objects.all()
+#             if user.is_double:
+                
+                
+#             for category in categories:
+#                 course_set = 
+        
+        
+        
+    
     
 class Get_Course(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]

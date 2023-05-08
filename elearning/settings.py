@@ -182,3 +182,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 
+PAYSTACT_SECRET_KEY = os.environ.get("PAYSTACT_SECRET_KEY")
+PAYSTACT_PUBLIC_KEY = os.environ.get("PAYSTACT_PUBLIC_KEY")

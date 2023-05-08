@@ -51,6 +51,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_general_admin = models.BooleanField(default=False)
+    is_double = models.BooleanField(default=False)
     staff=models.BooleanField(default=False)
     
     objects = UserManager()

@@ -3,6 +3,21 @@ from django.db import models
 from material.models import Material
 
 # Create your models here.
+class Category(models.Model):
+    """Model definition for Category."""
+    name = models.CharField("name", max_length=150)
+
+    # TODO: Define fields here
+
+    class Meta:
+        """Meta definition for Category."""
+
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        """Unicode representation of Category."""
+        return self.name
 
 class Course_Unit(models.Model):
     '''Model definition for Course_Unit.'''
@@ -43,6 +58,13 @@ class Course(models.Model):
     course_week = models.ManyToManyField(Course_Week, verbose_name="course_week",
                                          related_name="course_week"
                                          )
+    price = models.FloatField("price",default=0.00)
+    public  = models.BooleanField(default=True)
+    category = models.ForeignKey(Category, verbose_name="category",
+                                 related_name='course_category',
+                                 on_delete=models.SET_NULL,null=True)
+    purchase_count = models.IntegerField(default=0)
+    
 
     class Meta:
         '''Meta definition for Course.'''
@@ -73,7 +95,12 @@ class Course_set(models.Model):
     name = models.CharField("name", max_length=250)
     course_set_unit = models.ManyToManyField(Course_set_unit, verbose_name="Course set unit",
                                              related_name="course_set_unit")
-
+    price = models.FloatField("price",default=0.00)
+    public  = models.BooleanField(default=True)
+    category = models.ForeignKey(Category, verbose_name="category", 
+                                 related_name='course_set_category',
+                                 on_delete=models.SET_NULL,null=True)
+    purchase_count = models.IntegerField(default=0)
     class Meta:
         '''Meta definition for Course_set.'''
 
