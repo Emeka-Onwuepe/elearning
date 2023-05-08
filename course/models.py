@@ -64,7 +64,7 @@ class Course(models.Model):
                                  related_name='course_category',
                                  on_delete=models.SET_NULL,null=True)
     purchase_count = models.IntegerField(default=0)
-    
+    display_image = models.ImageField("dispaly image", upload_to='display_images/',default='default.jpg')
 
     class Meta:
         '''Meta definition for Course.'''
@@ -101,6 +101,7 @@ class Course_set(models.Model):
                                  related_name='course_set_category',
                                  on_delete=models.SET_NULL,null=True)
     purchase_count = models.IntegerField(default=0)
+    display_image = models.ImageField("dispaly image", upload_to='display_images/',default='default.jpg')
     class Meta:
         '''Meta definition for Course_set.'''
 
