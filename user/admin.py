@@ -68,7 +68,7 @@ class UserAdmin(BaseUserAdmin):
     # actions = [make_manager,]
     actions = []
     fieldsets = (
-    (None, {'fields': ('first_name','last_name','email', 'password',
+    (None, {'fields': ('first_name','last_name','email','is_double', 'password',
     'is_active')}),
     ('Permissions', {'fields': ('is_admin',"staff")}),
     )
@@ -77,7 +77,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
     (None, {
     'classes': ('wide',),
-    'fields': ('first_name','last_name','email', 'password1', 'password2')}
+    'fields': ('first_name','last_name','email','is_double', 'password1', 'password2')}
     ),
     )
     search_fields = ('email',)

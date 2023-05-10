@@ -42,3 +42,14 @@ class RegisterUser(generics.GenericAPIView):
         _,token=AuthToken.objects.create(user)
         returnedUser=Get_User_Serializer(user)
         return Response({"user":returnedUser.data,"token":token})
+    
+class SetUser(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        user.is_double = True
+        user.save()
+        _, token = AuthToken.objects.create(user)
+        returnedUser = Get_User_Serializer(user)
+        return Response({"user": returnedUser.data, "token": token})

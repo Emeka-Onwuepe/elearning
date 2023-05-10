@@ -29,25 +29,28 @@ class Get_Courses(generics.GenericAPIView):
         course_ids =[]
         course_sets_id = []
         course_sets_data = []
+        term = None
         if request.user.user_type == 'student':
             
             student_set =  Set.objects.get(students = request.user)
             if student_set.customize:
-                    if not student_set.special_class:
+                    if not student_set.special_class and not request.user.is_double:
                         content={"Access denied":"You are not assigned to any class."}
                         return Response(content,status=status.HTTP_403_FORBIDDEN)
-                    term = Term.objects.get(order= student_set.special_class.term,
+                    if student_set.special_class:
+                        term = Term.objects.get(order= student_set.special_class.term,
                                         term_special_class = student_set.special_class)
             else:
-                if not student_set.set_class:
+                if not student_set.set_class and not request.user.is_double:
                     content={"Access denied":"You are not assigned to any class."}
                     return Response(content,status=status.HTTP_403_FORBIDDEN)
-                term = Term.objects.get(order= student_set.set_class.term,
+                if student_set.set_class:
+                    term = Term.objects.get(order= student_set.set_class.term,
                                         term_class = student_set.set_class)
                 
-                
-            course_sets_data = Get_Course_Set_Serializer(term.course_set,many=True).data
-            returned_data['course_sets'].append(*course_sets_data)
+            if term: 
+                course_sets_data = Get_Course_Set_Serializer(term.course_set,many=True).data
+                returned_data['course_sets'].append(*course_sets_data)
         elif request.user.user_type == 'individual' or request.user.is_double:  
             course_sets_data = Get_Course_Set_Serializer(request.user.course_sets,many=True).data
             if course_sets_data:
@@ -58,9 +61,9 @@ class Get_Courses(generics.GenericAPIView):
                 returned_data['uniques'].append(*courses_data) 
             
             
-        for couse_set in course_sets_data:
+        for course_set in course_sets_data:
             course_sets_id.append(course_set['id'])
-            for course in couse_set['course_set_unit']:
+            for course in course_set['course_set_unit']:
                 course_ids.append(course['course'])
                 
         courses = Course.objects.filter(pk__in = course_ids)
