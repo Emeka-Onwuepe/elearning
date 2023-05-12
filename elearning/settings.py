@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'article.apps.ArticleConfig',
     'course.apps.CourseConfig',
     'material.apps.MaterialConfig',
+    'purchase.apps.PurchaseConfig',
     'quiz.apps.QuizConfig',
     'school.apps.SchoolConfig',
     'user.apps.UserConfig'

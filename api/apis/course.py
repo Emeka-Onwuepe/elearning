@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from article.models import Article
 from article.serializer import Get_Article_Serializer
 from course.models import Category, Course, Course_Unit,Course_set
-from course.serializers import Get_Category, Get_Course_Serializer, Get_Course_Set_Serializer, Get_Course_Unit_Serializer
+from course.serializers import Get_Category, Get_Course_Serializer, Get_Course_Set_Serializer, Get_Course_Set_Serializer_Depth, Get_Course_Unit_Serializer
 from material.models import Material, Video
 from material.serializers import Get_Material_Serializer,Get_Video_Serializer
 from quiz.models import Quiz
@@ -51,7 +51,7 @@ class Get_Courses(generics.GenericAPIView):
             if term: 
                 course_sets_data = Get_Course_Set_Serializer(term.course_set,many=True).data
                 returned_data['course_sets'].append(*course_sets_data)
-        elif request.user.user_type == 'individual' or request.user.is_double:  
+        if request.user.user_type == 'individual' or request.user.is_double:  
             course_sets_data = Get_Course_Set_Serializer(request.user.course_sets,many=True).data
             if course_sets_data:
                 returned_data['course_sets'].append(*course_sets_data)
@@ -61,10 +61,13 @@ class Get_Courses(generics.GenericAPIView):
                 returned_data['uniques'].append(*courses_data) 
             
             
-        for course_set in course_sets_data:
+        for course_set in returned_data['course_sets']:
             course_sets_id.append(course_set['id'])
             for course in course_set['course_set_unit']:
                 course_ids.append(course['course'])
+                
+        for course in returned_data['uniques']:
+            course_ids.append(course['id'])
                 
         courses = Course.objects.filter(pk__in = course_ids)
         courses_data = Get_Course_Serializer(courses,many=True).data
@@ -90,7 +93,7 @@ class Get_Courses(generics.GenericAPIView):
                          'course_sets':[]}
                 course_set = Course_set.objects.exclude(pk__in=course_sets_id).filter(category=category,
                                                     public = True).order_by('purchase_count')[:10]
-                course_set = Get_Course_Set_Serializer(course_set,many=True).data
+                course_set = Get_Course_Set_Serializer_Depth(course_set,many=True).data
                 if course_set:
                     # course_sets.append(course_set)
                     category_data['course_sets'] = course_set

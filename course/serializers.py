@@ -13,6 +13,12 @@ class Get_Course_Set_Serializer(serializers.ModelSerializer):
         model = Course_set
         fields = '__all__'
         depth = 1
+        
+class Get_Course_Set_Serializer_Depth(serializers.ModelSerializer):
+    class Meta:
+        model = Course_set
+        fields = '__all__'
+        depth = 2
 
 class Get_Course_Set_Unit_Serializer(serializers.ModelSerializer):
     class Meta:

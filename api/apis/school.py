@@ -7,7 +7,6 @@ from school.serializers import (Get_School_Serializer,Get_Class_Serializer,
 
 from rest_framework import permissions,generics
 from rest_framework.response import Response
-from knox.models import AuthToken
 
 class GetSchoolData(generics.GenericAPIView):
   
