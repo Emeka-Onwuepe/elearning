@@ -23,7 +23,7 @@ class Get_Courses(generics.GenericAPIView):
                        'course_sets': [],
                        'course': [],
                        'public_key': None,
-                        'categories': [],
+                        # 'categories': [],
                         'available_courses': []
                        }
         course_ids =[]
@@ -84,11 +84,12 @@ class Get_Courses(generics.GenericAPIView):
         
         if request.user.user_type == 'individual' or request.user.is_double: 
             categories = Category.objects.all()
-            returned_data['categories'] = Get_Category(categories,many=True).data
+            # returned_data['categories'] = Get_Category(categories,many=True).data
             
             for category in categories:
                 category_data = {
                         "category":category.name,
+                        'category_id': category.id,
                         'singles':[],
                          'course_sets':[]}
                 course_set = Course_set.objects.exclude(pk__in=course_sets_id).filter(category=category,
@@ -116,21 +117,55 @@ class Get_Courses(generics.GenericAPIView):
               
         return Response(returned_data)
     
-# class Get_Display_Course(generics.GenericAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
+class Get_Category(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     
-#     def get(self,request,*args,**kwargs):
-#         public_key = settings.PAYSTACT_PUBLIC_KEY
-#         user = request.user
-#         action = request.query_params['action']
-#         if action == 'all':
-#             # courses = Course.
-#             categories = Category.objects.all()
-#             if user.is_double:
+    def get(self,request,*args,**kwargs):
+        name = request.query_params['name']
+        id = request.query_params['id']
+        
+        course_sets_id = []
+        course_ids = []
+        course_set_list  = []
+    
+        term = None
+        if request.user.user_type == 'student':
+            
+            student_set =  Set.objects.get(students = request.user)
+            if student_set.customize:
+                    if not student_set.special_class and not request.user.is_double:
+                        content={"Access denied":"You are not assigned to any class."}
+                        return Response(content,status=status.HTTP_403_FORBIDDEN)
+                    if student_set.special_class:
+                        term = Term.objects.get(order= student_set.special_class.term,
+                                        term_special_class = student_set.special_class)
+            else:
+                if not student_set.set_class and not request.user.is_double:
+                    content={"Access denied":"You are not assigned to any class."}
+                    return Response(content,status=status.HTTP_403_FORBIDDEN)
+                if student_set.set_class:
+                    term = Term.objects.get(order= student_set.set_class.term,
+                                        term_class = student_set.set_class)
                 
-                
-#             for category in categories:
-#                 course_set = 
+            if term: 
+                course_set_list.append(*term.course_set.all())
+            
+        course_set_list.append(*request.user.course_sets.all()) 
+        course_ids.append(*request.user.courses.all().values_list('id',flat=True))
+        
+        for course_set in course_set_list:
+            course_sets_id.append(course_set.id)
+            for course in course_set.course_set_unit.all():
+                course_ids.append(course.course.id)
+      
+        
+        category = Category.objects.get(pk=id,name=name)
+        course_sets = Course_set.objects.filter(category=category).exclude(pk__in = course_sets_id)
+        courses = Course.objects.filter(category=category).exclude(pk__in = course_ids)
+        course_sets = Get_Course_Set_Serializer_Depth(course_sets,many=True).data
+        courses = Get_Course_Serializer(courses,many=True).data
+        
+        return Response({"course_sets":course_sets,"courses":courses})   
         
         
         

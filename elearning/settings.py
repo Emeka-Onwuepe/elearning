@@ -165,17 +165,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# # # AWS settings
-# AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID ")
-# AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-# AWS_STORAGE_BUCKET_NAME = "emeka-web-files"
-# AWS_S3_FILE_OVERWRITE = False
-# DEFAULT_FILE_STORAGE = 'elearning.aws_storage.MediaStorage'
-# AWS_QUERYSTRING_EXPIRE = 3600
-# AWS_S3_CUSTOM_DOMAIN ='dh2w4gheqibu3.cloudfront.net'
-# AWS_CLOUDFRONT_KEY = key
-# # AWS_CLOUDFRONT_KEY = os.environ.get('AWS_CLOUDFRONT_KEY', None).encode('ascii') 
-# AWS_CLOUDFRONT_KEY_ID = os.environ.get('AWS_CLOUDFRONT_KEY_ID', None)
+# # AWS settings
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID ")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "emeka-web-files"
+AWS_S3_FILE_OVERWRITE = False
+DEFAULT_FILE_STORAGE = 'elearning.aws_storage.MediaStorage'
+AWS_QUERYSTRING_EXPIRE = 3600
+AWS_S3_CUSTOM_DOMAIN ='dh2w4gheqibu3.cloudfront.net'
+AWS_CLOUDFRONT_KEY = key
+# AWS_CLOUDFRONT_KEY = os.environ.get('AWS_CLOUDFRONT_KEY', None).encode('ascii') 
+AWS_CLOUDFRONT_KEY_ID = os.environ.get('AWS_CLOUDFRONT_KEY_ID', None)
 
 # # STATICFILES_STORAGE = "elearning.aws_storage.StaticStorage"
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
