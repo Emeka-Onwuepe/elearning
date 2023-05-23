@@ -58,5 +58,19 @@ class GetPurchases(generics.GenericAPIView):
         purchases = Purchase.objects.filter(buyer=request.user.id)
         data = Get_Purchase_Serializer(purchases,many=True).data
         
-        return Response({'data': data})
+        return Response(data)
+    
+    
+class DeletePurchase(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        id = request.data
+        print(id)
+        purchase = Purchase.objects.get(id =int(id))
+        purchase.delete()
+        # purchases = Purchase.objects.filter(buyer=request.user.id)
+        # data = Get_Purchase_Serializer(purchases,many=True).data
+        return Response({"resolved":True})
+        
+    
     

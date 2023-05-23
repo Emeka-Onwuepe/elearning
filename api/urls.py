@@ -2,7 +2,7 @@ from rest_framework import routers
 from django.urls import path
 from knox import views as KnoxView
 
-from api.apis.purchase import GetPurchases, ProcessPurchase
+from api.apis.purchase import GetPurchases, ProcessPurchase,DeletePurchase
 
 from .apis.course import Get_Course, Get_Courses, Get_Lession,Get_Category
 router = routers.DefaultRouter()
@@ -21,6 +21,7 @@ urlpatterns = [
     path('setuser', SetUser.as_view(), name="set_user"),
     path('processpurchase', ProcessPurchase.as_view(), name="process_purchase"),
     path('getpurchases',GetPurchases.as_view(),name="get_purchases"),
+    path('deletepurchase',DeletePurchase.as_view(),name="delete_purchases"),
     path('getcategory',Get_Category.as_view(),name="get_category")
         
 ]
