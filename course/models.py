@@ -1,4 +1,5 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 
 from material.models import Material
 
@@ -65,6 +66,8 @@ class Course(models.Model):
                                  on_delete=models.SET_NULL,null=True)
     purchase_count = models.IntegerField(default=0)
     display_image = models.ImageField("dispaly image", upload_to='display_images/',default='default.jpg')
+    discription = models.TextField(default="null",max_length=150)
+    
 
     class Meta:
         '''Meta definition for Course.'''
@@ -102,6 +105,7 @@ class Course_set(models.Model):
                                  on_delete=models.SET_NULL,null=True)
     purchase_count = models.IntegerField(default=0)
     display_image = models.ImageField("dispaly image", upload_to='display_images/',default='default.jpg')
+    discription = models.TextField(default="null",max_length=150)
     class Meta:
         '''Meta definition for Course_set.'''
 

@@ -93,6 +93,7 @@ REST_FRAMEWORK = {
         "knox.auth.TokenAuthentication",
     ],
     "DATETIME_FORMAT":"%d/%b/%Y %H:%M",
+    "DATE_FORMAT":"%d/%b/%Y",
     
 }
 

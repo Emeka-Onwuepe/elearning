@@ -23,7 +23,7 @@ class Purchase(models.Model):
 
         verbose_name = 'Purchase'
         verbose_name_plural = 'Purchases'
-        ordering = ('date',)
+        ordering = ('-date',)
 
     def __str__(self):
         """Unicode representation of Purchase."""

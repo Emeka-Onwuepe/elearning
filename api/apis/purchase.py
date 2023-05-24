@@ -23,9 +23,15 @@ class ProcessPurchase(generics.GenericAPIView):
                 for item in data['items']:
                     if item['type'] == 'course':
                         course = Course.objects.get(pk=item['id'])
+                        course.purchase_count += 1
+                        course.save()
                         purchase.courses.add(course)
                     else:
+                        print(item['id'])
+                        ids = Course_set.objects.all().values('id')
                         course_set = Course_set.objects.get(pk=item['id'])
+                        course_set.purchase_count += 1
+                        course_set.save()
                         purchase.course_sets.add(course_set)
             return Response({'created':created})    
         
@@ -65,7 +71,6 @@ class DeletePurchase(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, *args, **kwargs):
         id = request.data
-        print(id)
         purchase = Purchase.objects.get(id =int(id))
         purchase.delete()
         # purchases = Purchase.objects.filter(buyer=request.user.id)
