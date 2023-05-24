@@ -50,15 +50,15 @@ class Get_Courses(generics.GenericAPIView):
                 
             if term: 
                 course_sets_data = Get_Course_Set_Serializer(term.course_set,many=True).data
-                returned_data['course_sets'].append(*course_sets_data)
+                returned_data['course_sets'].extend(course_sets_data)
         if request.user.user_type == 'individual' or request.user.is_double:  
             course_sets_data = Get_Course_Set_Serializer(request.user.course_sets,many=True).data
             if course_sets_data:
-                returned_data['course_sets'].append(*course_sets_data)
+                returned_data['course_sets'].extend(course_sets_data)
             # courses = Course.objects.filter(pk__in = request.user.courses)
             courses_data = Get_Course_Serializer(request.user.courses,many=True).data
             if courses_data:
-                returned_data['uniques'].append(*courses_data) 
+                returned_data['uniques'].extend(courses_data) 
             
             
         for course_set in returned_data['course_sets']:
@@ -148,10 +148,10 @@ class Get_Category(generics.GenericAPIView):
                                         term_class = student_set.set_class)
                 
             if term: 
-                course_set_list.append(*term.course_set.all())
+                course_set_list.extend(term.course_set.all())
             
-        course_set_list.append(*request.user.course_sets.all()) 
-        course_ids.append(*request.user.courses.all().values_list('id',flat=True))
+        course_set_list.extend(request.user.course_sets.all()) 
+        course_ids.extend(request.user.courses.all().values_list('id',flat=True))
         
         for course_set in course_set_list:
             course_sets_id.append(course_set.id)
