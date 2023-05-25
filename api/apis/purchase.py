@@ -33,7 +33,7 @@ class ProcessPurchase(generics.GenericAPIView):
                         course_set.purchase_count += 1
                         course_set.save()
                         purchase.course_sets.add(course_set)
-            return Response({'created':created})    
+            return Response({'created':created,'id':purchase.id})    
         
         if data['action'] == "confirm":
             
