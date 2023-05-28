@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import permissions,generics,status
 from rest_framework.response import Response
-from article.models import Article
-from article.serializer import Get_Article_Serializer
+from article.models import Article, Sections
+from article.serializer import Get_Article_Serializer, Get_Section_Serializer
 from course.models import Category, Course, Course_Unit,Course_set
 from course.serializers import Get_Category, Get_Course_Serializer, Get_Course_Set_Serializer, Get_Course_Set_Serializer_Depth, Get_Course_Unit_Serializer
 from material.models import Material, Video
@@ -195,23 +195,34 @@ class Get_Course(generics.GenericAPIView):
       
         return Response({'course':data,"units":course_unit_data,'materials':material_data})
     
-class Get_Lession(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+# class Get_Lession(generics.GenericAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
   
 
+#     def get(self, request, *args, **kwargs):
+
+#         lession_id = request.query_params['id']
+#         type = request.query_params['type']
+
+#         if type == 'video':
+#             lesson = Video.objects.get(id=lession_id)
+#             lesson_data = Get_Video_Serializer(lesson).data
+#         if type == 'quiz':
+#             lesson = Quiz.objects.get(id=lession_id)
+#             lesson_data = Get_Quiz_Serializer(lesson).data
+#         if type == 'article':
+#             lesson = Article.objects.get(id=lession_id)
+#             lesson_data = Get_Article_Serializer(lesson).data
+            
+#         return Response({'lesson':lesson_data})
+
+class Get_Sections(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
     def get(self, request, *args, **kwargs):
 
-        lession_id = request.query_params['id']
-        type = request.query_params['type']
-
-        if type == 'video':
-            lesson = Video.objects.get(id=lession_id)
-            lesson_data = Get_Video_Serializer(lesson).data
-        if type == 'quiz':
-            lesson = Quiz.objects.get(id=lession_id)
-            lesson_data = Get_Quiz_Serializer(lesson).data
-        if type == 'article':
-            lesson = Article.objects.get(id=lession_id)
-            lesson_data = Get_Article_Serializer(lesson).data
-            
-        return Response({'lesson':lesson_data})
+        article_id = request.query_params['id']
+        sections = Sections.objects.filter(article = int(article_id))
+        data = Get_Section_Serializer(sections,many=True).data
+        
+        return Response({'sections':data})
