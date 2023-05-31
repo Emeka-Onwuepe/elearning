@@ -226,3 +226,17 @@ class Get_Sections(generics.GenericAPIView):
         data = Get_Section_Serializer(sections,many=True).data
         
         return Response({'sections':data})
+    
+
+class Get_Article(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+
+        article_id = request.query_params['id']
+        article = Article.objects.get(pk = int(article_id))
+        article = Get_Article_Serializer(article).data
+        sections = Sections.objects.filter(article = int(article_id))
+        data = Get_Section_Serializer(sections,many=True).data
+        
+        return Response({'sections':data,'article':article})

@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 
 from article.models import Article
@@ -7,7 +8,7 @@ from quiz.models import Quiz
 class Video(models.Model):
     '''Model definition for Video.'''
     name = models.CharField("name", max_length=150)
-    file = models.FileField("file",upload_to = 'videos/',)
+    file = models.FileField("file",upload_to = 'videos/',validators=[FileExtensionValidator(allowed_extensions=['mp4'])])
 
     class Meta:
         '''Meta definition for Video.'''

@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 
 from ckeditor.fields import RichTextField
@@ -18,8 +19,8 @@ import sys
 
 class Article(models.Model):
     title = models.CharField(max_length=255)
-    title_slug = models.SlugField(default="null")
-    audio = models.FileField("audio",null=True, blank=True,upload_to = 'audio/',)
+    audio = models.FileField("audio",null=True, blank=True,upload_to = 'audio/',
+                             validators=[FileExtensionValidator(allowed_extensions=['mp3'])])
     image = models.ImageField(null=True,upload_to='images/',blank=True)
     image_source = models.CharField(max_length=255, null=True, blank=True)
     image_description = models.CharField(
@@ -50,20 +51,20 @@ class Article(models.Model):
     def save(self, skip_md=True, *args, **kwargs):
         if skip_md:
             self.mod_date = datetime.datetime.now()
-
-        if self.image:
-            im = Image.open(self.image)
+            
+        if self.Sub_section_image:
+            im = Image.open(self.Sub_section_image)
             width, height = im.size
             output = BytesIO()
-            n = 0.5
-            Width = floor(width * n)
-            Height = floor(height * n)
-            if width > 1000:
-                im = im.resize((Width, Height))
+            newWidth = 400
+            ratio = round(newWidth/width,2)
+            newHeight = floor(height * ratio)
+            if width > 500:
+                im = im.resize((newWidth, newHeight))
                 im.save(output, format='JPEG', quality=100)
                 output.seek(0)
-                self.image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % self.image.name.split(
-                    '.')[0], 'image/jpeg', sys.getsizeof(output), None)
+                self.Sub_section_image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % self.Sub_section_image.name.split('.')[
+                                                              0], 'image/jpeg', sys.getsizeof(output), None)
 
         super().save(*args, **kwargs)  # Call the real save() method
 
@@ -74,7 +75,8 @@ class Sections(models.Model):
     article = models.ForeignKey(
         Article, related_name='sections', on_delete=models.CASCADE)
     sub_heading = models.CharField(max_length=255, null=True)
-    audio = models.FileField("audio",null=True, blank=True,upload_to='audio/')
+    audio = models.FileField("audio",null=True, blank=True,upload_to='audio/',
+                             validators=[FileExtensionValidator(allowed_extensions=['mp3'])])
     Sub_section_image = models.ImageField(null=True, blank=True,upload_to = 'images/',)
     image_source = models.CharField(max_length=255, null=True, blank=True)
     image_description = models.CharField(
@@ -95,13 +97,10 @@ class Sections(models.Model):
             im = Image.open(self.Sub_section_image)
             width, height = im.size
             output = BytesIO()
-            # n = 0.5
-            # Width = floor(width * n)
-            # Height = floor(height * n)
             newWidth = 400
             ratio = round(newWidth/width,2)
             newHeight = floor(height * ratio)
-            if width > 1000:
+            if width > 500:
                 im = im.resize((newWidth, newHeight))
                 im.save(output, format='JPEG', quality=100)
                 output.seek(0)
