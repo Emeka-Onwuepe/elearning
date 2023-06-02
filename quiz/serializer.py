@@ -6,4 +6,4 @@ class Get_Quiz_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = '__all__'
-        depth = 2
+        depth = 3

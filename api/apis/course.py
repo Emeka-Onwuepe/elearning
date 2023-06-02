@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from article.models import Article, Sections
 from article.serializer import Get_Article_Serializer, Get_Section_Serializer
 from course.models import Category, Course, Course_Unit,Course_set
-from course.serializers import Get_Category, Get_Course_Serializer, Get_Course_Set_Serializer, Get_Course_Set_Serializer_Depth, Get_Course_Unit_Serializer
+from course.serializers import (Get_Category, Get_Course_Serializer, Get_Course_Set_Serializer, 
+                                Get_Course_Set_Serializer_Depth, Get_Course_Unit_Serializer)
 from material.models import Material, Video
 from material.serializers import Get_Material_Serializer,Get_Video_Serializer
 from quiz.models import Quiz
@@ -240,3 +241,14 @@ class Get_Article(generics.GenericAPIView):
         data = Get_Section_Serializer(sections,many=True).data
         
         return Response({'sections':data,'article':article})
+       
+class Quiz_View(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+
+        quiz_id = request.query_params['id']
+        quiz = Quiz.objects.get(pk = int(quiz_id))
+        quiz = Get_Quiz_Serializer(quiz).data
+        
+        return Response(quiz)  

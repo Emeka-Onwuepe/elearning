@@ -5,7 +5,7 @@ from knox import views as KnoxView
 from api.apis.purchase import GetPurchases, ProcessPurchase,DeletePurchase
 
 from .apis.course import (Get_Course, Get_Courses,Get_Category,
-                          Get_Sections,Get_Article)
+                          Get_Sections,Get_Article,Quiz_View)
 router = routers.DefaultRouter()
 from .apis.user import RegisterUser,LoginUser, SetUser
 from .apis.school import GetSchoolData
@@ -25,7 +25,9 @@ urlpatterns = [
     path('deletepurchase',DeletePurchase.as_view(),name="delete_purchases"),
     path('getcategory',Get_Category.as_view(),name="get_category"),
     path('getarticle',Get_Article.as_view(),name="get_article"),
-    path('getsection',Get_Sections.as_view(),name="get_section")
+    path('getsection',Get_Sections.as_view(),name="get_section"),
+    path('quizview',Quiz_View.as_view(),name="quiz_view"),
+    
     
         
 ]
