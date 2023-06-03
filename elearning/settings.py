@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'purchase.apps.PurchaseConfig',
     'quiz.apps.QuizConfig',
     'school.apps.SchoolConfig',
+    'score.apps.ScoreConfig',
     'user.apps.UserConfig'
 ]
 

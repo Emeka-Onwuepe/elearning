@@ -3,9 +3,10 @@ from django.urls import path
 from knox import views as KnoxView
 
 from api.apis.purchase import GetPurchases, ProcessPurchase,DeletePurchase
+from api.apis.quiz import Get_Quiz_Score, Quiz_View
 
 from .apis.course import (Get_Course, Get_Courses,Get_Category,
-                          Get_Sections,Get_Article,Quiz_View)
+                          Get_Sections,Get_Article)
 router = routers.DefaultRouter()
 from .apis.user import RegisterUser,LoginUser, SetUser
 from .apis.school import GetSchoolData
@@ -27,6 +28,7 @@ urlpatterns = [
     path('getarticle',Get_Article.as_view(),name="get_article"),
     path('getsection',Get_Sections.as_view(),name="get_section"),
     path('quizview',Quiz_View.as_view(),name="quiz_view"),
+    path('getquizscore',Get_Quiz_Score.as_view(),name="get_quiz_score"),
     
     
         
