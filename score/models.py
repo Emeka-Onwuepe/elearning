@@ -36,6 +36,7 @@ class Quiz_Score(models.Model):
     current_score = models.FloatField(default=0.00)
     attempts = models.IntegerField(default=0.00)
     total = models.FloatField(default=0.00)
+    daily_count = models.IntegerField(default=0)
     last_updated = models.DateTimeField("last updated", auto_now=True, auto_now_add=False)
 
     class Meta:

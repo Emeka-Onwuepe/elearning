@@ -19,9 +19,11 @@ def create_Course_Score(sender, instance, *args, **kwargs):
 def Update_Course_Score(sender, instance, *args, **kwargs):
     if instance.pk:
         old_instance = Quiz_Score.objects.get(pk = instance.pk)
+        daily_limit = 2
         
         if old_instance.current_score != instance.current_score:
             instance.previous_agg_score =  old_instance.agg_score
+            instance.daily_count += 1 if instance.daily_count < daily_limit else ((daily_limit*-1)+1)
             instance.attempts += 1
             instance.total +=  instance.current_score
             instance.agg_score = round(instance.total/instance.attempts,2)
@@ -30,7 +32,6 @@ def Update_Course_Score(sender, instance, *args, **kwargs):
             
             course_score = instance.course_score
             course_score.agg_score = round(course_score.agg_score + (course_score.weight *  diff),2)
-            print(round(course_score.agg_score + (course_score.weight *  diff),2))
             course_score.save()
             
    
