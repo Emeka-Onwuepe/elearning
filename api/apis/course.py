@@ -5,8 +5,8 @@ from article.serializer import Get_Article_Serializer, Get_Section_Serializer
 from course.models import Category, Course, Course_Unit,Course_set
 from course.serializers import (Get_Course_Serializer, Get_Course_Set_Serializer, 
                                 Get_Course_Set_Serializer_Depth, Get_Course_Unit_Serializer)
-from material.models import Material
-from material.serializers import Get_Material_Serializer
+from material.models import Material, Video
+from material.serializers import Get_Material_Serializer, Get_Video_Serializer
 
 
 from school.models import Set, Term
@@ -193,26 +193,26 @@ class Get_Course(generics.GenericAPIView):
       
         return Response({'course':data,"units":course_unit_data,'materials':material_data})
     
-# class Get_Lession(generics.GenericAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
+class Get_Material(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
   
 
-#     def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
 
-#         lession_id = request.query_params['id']
-#         type = request.query_params['type']
+        lession_id = request.query_params['id']
+        type = request.query_params['type']
 
-#         if type == 'video':
-#             lesson = Video.objects.get(id=lession_id)
-#             lesson_data = Get_Video_Serializer(lesson).data
-#         if type == 'quiz':
-#             lesson = Quiz.objects.get(id=lession_id)
-#             lesson_data = Get_Quiz_Serializer(lesson).data
-#         if type == 'article':
-#             lesson = Article.objects.get(id=lession_id)
-#             lesson_data = Get_Article_Serializer(lesson).data
+        if type == 'video':
+            lesson = Video.objects.get(id=lession_id)
+            lesson_data = Get_Video_Serializer(lesson).data
+        # if type == 'quiz':
+        #     lesson = Quiz.objects.get(id=lession_id)
+        #     lesson_data = Get_Quiz_Serializer(lesson).data
+        if type == 'article':
+            lesson = Article.objects.get(id=lession_id)
+            lesson_data = Get_Article_Serializer(lesson).data
             
-#         return Response({'lesson':lesson_data})
+        return Response({'data':lesson_data})
 
 class Get_Sections(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]

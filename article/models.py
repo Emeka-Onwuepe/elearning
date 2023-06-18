@@ -19,6 +19,7 @@ import sys
 
 class Article(models.Model):
     title = models.CharField(max_length=255)
+    test_image = models.ImageField(default='default.jpg',editable=False)
     audio = models.FileField("audio",null=True, blank=True,upload_to = 'audio/',
                              validators=[FileExtensionValidator(allowed_extensions=['mp3'])])
     image = models.ImageField(null=True,upload_to='images/',blank=True)
@@ -52,8 +53,8 @@ class Article(models.Model):
         if skip_md:
             self.mod_date = datetime.datetime.now()
             
-        if self.Sub_section_image:
-            im = Image.open(self.Sub_section_image)
+        if self.image:
+            im = Image.open(self.image)
             width, height = im.size
             output = BytesIO()
             newWidth = 400
@@ -63,7 +64,7 @@ class Article(models.Model):
                 im = im.resize((newWidth, newHeight))
                 im.save(output, format='JPEG', quality=100)
                 output.seek(0)
-                self.Sub_section_image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % self.Sub_section_image.name.split('.')[
+                self.image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % self.image.name.split('.')[
                                                               0], 'image/jpeg', sys.getsizeof(output), None)
 
         super().save(*args, **kwargs)  # Call the real save() method
